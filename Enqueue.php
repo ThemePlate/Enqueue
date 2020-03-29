@@ -17,6 +17,10 @@ class Enqueue {
 
 		global $wp_scripts;
 
+		if ( empty( $wp_scripts->queue ) ) {
+			return;
+		}
+
 		foreach ( $wp_scripts->registered as $handle => $dependency ) {
 			if ( ! empty( $dependency->extra['async'] ) ) {
 
