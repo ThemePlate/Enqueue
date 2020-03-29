@@ -37,7 +37,9 @@ class Enqueue {
 			}
 		}
 
-		add_filter( 'script_loader_tag', array( Enqueue::class, 'hooker' ), 10, 2 );
+		if ( ! empty( self::$storage ) ) {
+			add_filter( 'script_loader_tag', array( Enqueue::class, 'hooker' ), 10, 2 );
+		}
 
 	}
 
