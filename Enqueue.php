@@ -22,11 +22,18 @@ class Enqueue {
 		}
 
 		foreach ( $wp_scripts->registered as $handle => $dependency ) {
-			if ( ! empty( $dependency->extra['async'] ) ) {
+			$attribute = '';
 
-				self::$storage[ $handle ] = 'async';
-			} elseif ( ! empty( $dependency->extra['defer'] ) ) {
-				self::$storage[ $handle ] = 'defer';
+			if ( ! empty( $dependency->extra['async'] ) ) {
+				$attribute .= 'async ';
+			}
+
+			if ( ! empty( $dependency->extra['defer'] ) ) {
+				$attribute .= 'defer ';
+			}
+
+			if ( $attribute ) {
+				self::$storage[ $handle ] = trim( $attribute );
 			}
 		}
 
