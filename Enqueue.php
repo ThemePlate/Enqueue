@@ -26,6 +26,13 @@ class Enqueue {
 
 	public static function init() {
 
+		add_action( 'wp_enqueue_scripts', array( Enqueue::class, 'action' ), PHP_INT_MAX );
+
+	}
+
+
+	public static function action() {
+
 		global $wp_scripts;
 
 		if ( empty( $wp_scripts->queue ) ) {
