@@ -11,7 +11,18 @@ namespace ThemePlate;
 
 class Enqueue {
 
-	private static $storage = array();
+	private static $storage    = array();
+	private static $attributes = array(
+		'async',
+		'crossorigin',
+		'defer',
+		'integrity',
+		'nomodule',
+		'nonce',
+		'referrerpolicy',
+		'type',
+	);
+
 
 	public static function init() {
 
@@ -22,18 +33,12 @@ class Enqueue {
 		}
 
 		foreach ( $wp_scripts->registered as $handle => $dependency ) {
-			$attribute = '';
+			$specified = array_intersect( array_keys( $dependency->extra ), self::$attributes );
 
-			if ( ! empty( $dependency->extra['async'] ) ) {
-				$attribute .= 'async ';
-			}
-
-			if ( ! empty( $dependency->extra['defer'] ) ) {
-				$attribute .= 'defer ';
-			}
-
-			if ( $attribute ) {
-				self::$storage[ $handle ] = trim( $attribute );
+			if ( ! empty( $specified ) ) {
+				foreach ( $specified as $attribute ) {
+					self::$storage[ $handle ][ $attribute ] = $dependency->extra[ $attribute ];
+				}
 			}
 		}
 
@@ -47,9 +52,18 @@ class Enqueue {
 	public static function hooker( $tag, $handle ) {
 
 		if ( array_key_exists( $handle, self::$storage ) ) {
-			$attribute = self::$storage[ $handle ];
+			$string = '';
 
-			return str_replace( ' src', " $attribute src", $tag );
+			foreach ( self::$storage[ $handle ] as $attr => $value ) {
+				if ( is_bool( $value ) ) {
+					$string .= " $attr";
+				} else {
+					$value   = esc_attr( $value );
+					$string .= " $attr='$value'";
+				}
+			}
+
+			return str_replace( ' src', "$string src", $tag );
 		}
 
 		return $tag;
