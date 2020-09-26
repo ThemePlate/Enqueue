@@ -13,14 +13,22 @@ class Enqueue {
 
 	private static $storage    = array();
 	private static $attributes = array(
-		'async',
-		'crossorigin',
-		'defer',
-		'integrity',
-		'nomodule',
-		'nonce',
-		'referrerpolicy',
-		'type',
+		'common' => array(
+			'crossorigin',
+			'integrity',
+			'referrerpolicy',
+		),
+		'script' => array(
+			'async',
+			'defer',
+			'nomodule',
+			'nonce',
+			'type',
+		),
+		'style'  => array(
+			'disabled',
+			'hreflang',
+		),
 	);
 
 
@@ -33,47 +41,80 @@ class Enqueue {
 
 	public static function action() {
 
-		global $wp_scripts;
+		global $wp_scripts, $wp_styles;
 
-		if ( empty( $wp_scripts->queue ) ) {
-			return;
-		}
+		foreach ( array( $wp_scripts, $wp_styles ) as $dependencies ) {
+			if ( empty( $dependencies->queue ) ) {
+				continue;
+			}
 
-		foreach ( $wp_scripts->registered as $handle => $dependency ) {
-			$specified = array_intersect( array_keys( $dependency->extra ), self::$attributes );
+			$type = get_class( $dependencies );
+			$type = strtolower( substr( $type, 3, -1 ) );
 
-			if ( ! empty( $specified ) ) {
-				foreach ( $specified as $attribute ) {
-					self::$storage[ $handle ][ $attribute ] = $dependency->extra[ $attribute ];
+			$attributes = array_merge( self::$attributes['common'], self::$attributes[ $type ] );
+
+			foreach ( $dependencies->registered as $dependency ) {
+				$specified = array_intersect( array_keys( $dependency->extra ), $attributes );
+
+				if ( ! empty( $specified ) ) {
+					foreach ( $specified as $attribute ) {
+						self::$storage[ $type ][ $dependency->handle ][ $attribute ] = $dependency->extra[ $attribute ];
+					}
 				}
 			}
 		}
 
-		if ( ! empty( self::$storage ) ) {
-			add_filter( 'script_loader_tag', array( Enqueue::class, 'hooker' ), 10, 2 );
+		if ( ! empty( self::$storage['script'] ) ) {
+			add_filter( 'script_loader_tag', array( Enqueue::class, 'hooker_script' ), 10, 2 );
+		}
+
+		if ( ! empty( self::$storage['style'] ) ) {
+			add_filter( 'style_loader_tag', array( Enqueue::class, 'hooker_style' ), 10, 2 );
 		}
 
 	}
 
 
-	public static function hooker( $tag, $handle ) {
+	public static function hooker_script( $tag, $handle ) {
 
-		if ( array_key_exists( $handle, self::$storage ) ) {
-			$string = '';
-
-			foreach ( self::$storage[ $handle ] as $attr => $value ) {
-				if ( is_bool( $value ) ) {
-					$string .= " $attr";
-				} else {
-					$value   = esc_attr( $value );
-					$string .= " $attr='$value'";
-				}
-			}
+		if ( array_key_exists( $handle, self::$storage['script'] ) ) {
+			$string = self::stringify( self::$storage['script'][ $handle ] );
 
 			return str_replace( ' src', "$string src", $tag );
 		}
 
 		return $tag;
+
+	}
+
+
+	public static function hooker_style( $tag, $handle ) {
+
+		if ( array_key_exists( $handle, self::$storage['style'] ) ) {
+			$string = self::stringify( self::$storage['style'][ $handle ] );
+
+			return str_replace( ' href=', "$string href=", $tag );
+		}
+
+		return $tag;
+
+	}
+
+
+	private static function stringify( $attributes ) {
+
+		$string = '';
+
+		foreach ( $attributes as $attr => $value ) {
+			if ( is_bool( $value ) ) {
+				$string .= " $attr";
+			} else {
+				$value   = esc_attr( $value );
+				$string .= " $attr='$value'";
+			}
+		}
+
+		return $string;
 
 	}
 
