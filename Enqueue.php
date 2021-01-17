@@ -12,6 +12,7 @@ namespace ThemePlate;
 class Enqueue {
 
 	private static $storage    = array();
+	private static $dynamics   = array();
 	private static $attributes = array(
 		'common' => array(
 			'crossorigin',
@@ -35,6 +36,14 @@ class Enqueue {
 	public static function init() {
 
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'action' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'dynamics' ) );
+
+	}
+
+
+	public static function asset( $type, $handle ) {
+
+		self::$dynamics[ $type ][] = $handle;
 
 	}
 
@@ -115,6 +124,21 @@ class Enqueue {
 		}
 
 		return $string;
+
+	}
+
+
+	public static function dynamics() {
+
+		foreach ( array( 'script', 'style' ) as $type ) {
+			if ( ! empty( self::$dynamics[ $type ] ) ) {
+				foreach ( self::$dynamics[ $type ] as $tag ) {
+					$func = 'wp_enqueue_' . $type;
+
+					$func( $tag );
+				}
+			}
+		}
 
 	}
 
