@@ -34,7 +34,7 @@ class Enqueue {
 
 	public static function init() {
 
-		add_action( 'wp_enqueue_scripts', array( Enqueue::class, 'action' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'action' ), PHP_INT_MAX );
 
 	}
 
@@ -65,11 +65,11 @@ class Enqueue {
 		}
 
 		if ( ! empty( self::$storage['script'] ) ) {
-			add_filter( 'script_loader_tag', array( Enqueue::class, 'hooker_script' ), 10, 2 );
+			add_filter( 'script_loader_tag', array( __CLASS__, 'hooker_script' ), 10, 2 );
 		}
 
 		if ( ! empty( self::$storage['style'] ) ) {
-			add_filter( 'style_loader_tag', array( Enqueue::class, 'hooker_style' ), 10, 2 );
+			add_filter( 'style_loader_tag', array( __CLASS__, 'hooker_style' ), 10, 2 );
 		}
 
 	}
