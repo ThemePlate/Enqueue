@@ -11,9 +11,9 @@ namespace ThemePlate;
 
 class Enqueue {
 
-	private static $storage    = array();
-	private static $dynamics   = array();
-	private static $attributes = array(
+	private static array $storage    = array();
+	private static array $dynamics   = array();
+	private static array $attributes = array(
 		'common' => array(
 			'crossorigin',
 			'integrity',
@@ -33,7 +33,7 @@ class Enqueue {
 	);
 
 
-	public static function init() {
+	public static function init(): void {
 
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'action' ), PHP_INT_MAX );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'dynamics' ) );
@@ -41,14 +41,14 @@ class Enqueue {
 	}
 
 
-	public static function asset( $type, $handle ) {
+	public static function asset( string $type, string $handle ): void {
 
 		self::$dynamics[ $type ][] = $handle;
 
 	}
 
 
-	public static function action() {
+	public static function action(): void {
 
 		global $wp_scripts, $wp_styles;
 
@@ -84,7 +84,7 @@ class Enqueue {
 	}
 
 
-	public static function hooker_script( $tag, $handle ) {
+	public static function hooker_script( string $tag, string $handle ): string {
 
 		if ( array_key_exists( $handle, self::$storage['script'] ) ) {
 			$string = self::stringify( self::$storage['script'][ $handle ] );
@@ -97,7 +97,7 @@ class Enqueue {
 	}
 
 
-	public static function hooker_style( $tag, $handle ) {
+	public static function hooker_style( string $tag, string $handle ): string {
 
 		if ( array_key_exists( $handle, self::$storage['style'] ) ) {
 			$string = self::stringify( self::$storage['style'][ $handle ] );
@@ -110,7 +110,7 @@ class Enqueue {
 	}
 
 
-	private static function stringify( $attributes ) {
+	private static function stringify( array $attributes ): string {
 
 		$string = '';
 
@@ -128,7 +128,7 @@ class Enqueue {
 	}
 
 
-	public static function dynamics() {
+	public static function dynamics(): void {
 
 		foreach ( array( 'script', 'style' ) as $type ) {
 			if ( ! empty( self::$dynamics[ $type ] ) ) {
