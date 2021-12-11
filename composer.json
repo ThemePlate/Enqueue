@@ -13,7 +13,10 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"ThemePlate\\": ""
-		}
+			"ThemePlate\\Enqueue\\": "src"
+		},
+		"files": [
+			"Enqueue.php"
+		]
 	}
 }

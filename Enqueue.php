@@ -4,141 +4,33 @@
  * Helper for registered dependencies
  *
  * @package ThemePlate
- * @since 0.1.0
+ * @since   0.1.0
  */
 
 namespace ThemePlate;
 
+use ThemePlate\Enqueue\CustomData;
+use ThemePlate\Enqueue\Dynamic;
+
 class Enqueue {
 
-	private static array $storage    = array();
-	private static array $dynamics   = array();
-	private static array $attributes = array(
-		'common' => array(
-			'crossorigin',
-			'integrity',
-			'referrerpolicy',
-		),
-		'script' => array(
-			'async',
-			'defer',
-			'nomodule',
-			'nonce',
-			'type',
-		),
-		'style'  => array(
-			'disabled',
-			'hreflang',
-		),
-	);
+	private static Dynamic $dynamic;
 
 
 	public static function init(): void {
 
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'action' ), PHP_INT_MAX );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'dynamics' ) );
+		$custom_data   = new CustomData();
+		self::$dynamic = new Dynamic();
+
+		add_action( 'wp_enqueue_scripts', array( $custom_data, 'action' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( self::$dynamic, 'action' ) );
 
 	}
 
 
 	public static function asset( string $type, string $handle ): void {
 
-		self::$dynamics[ $type ][] = $handle;
-
-	}
-
-
-	public static function action(): void {
-
-		global $wp_scripts, $wp_styles;
-
-		foreach ( array( $wp_scripts, $wp_styles ) as $dependencies ) {
-			if ( empty( $dependencies->queue ) || empty( $dependencies->registered ) ) {
-				continue;
-			}
-
-			$type = get_class( $dependencies );
-			$type = strtolower( substr( $type, 3, -1 ) );
-
-			$attributes = array_merge( self::$attributes['common'], self::$attributes[ $type ] );
-
-			foreach ( $dependencies->registered as $dependency ) {
-				$specified = array_intersect( array_keys( $dependency->extra ), $attributes );
-
-				if ( ! empty( $specified ) ) {
-					foreach ( $specified as $attribute ) {
-						self::$storage[ $type ][ $dependency->handle ][ $attribute ] = $dependency->extra[ $attribute ];
-					}
-				}
-			}
-		}
-
-		if ( ! empty( self::$storage['script'] ) ) {
-			add_filter( 'script_loader_tag', array( __CLASS__, 'hooker_script' ), 10, 2 );
-		}
-
-		if ( ! empty( self::$storage['style'] ) ) {
-			add_filter( 'style_loader_tag', array( __CLASS__, 'hooker_style' ), 10, 2 );
-		}
-
-	}
-
-
-	public static function hooker_script( string $tag, string $handle ): string {
-
-		if ( array_key_exists( $handle, self::$storage['script'] ) ) {
-			$string = self::stringify( self::$storage['script'][ $handle ] );
-
-			return str_replace( ' src', "$string src", $tag );
-		}
-
-		return $tag;
-
-	}
-
-
-	public static function hooker_style( string $tag, string $handle ): string {
-
-		if ( array_key_exists( $handle, self::$storage['style'] ) ) {
-			$string = self::stringify( self::$storage['style'][ $handle ] );
-
-			return str_replace( ' href=', "$string href=", $tag );
-		}
-
-		return $tag;
-
-	}
-
-
-	private static function stringify( array $attributes ): string {
-
-		$string = '';
-
-		foreach ( $attributes as $attr => $value ) {
-			if ( is_bool( $value ) ) {
-				$string .= " $attr";
-			} else {
-				$value   = esc_attr( $value );
-				$string .= " $attr='$value'";
-			}
-		}
-
-		return $string;
-
-	}
-
-
-	public static function dynamics(): void {
-
-		foreach ( array( 'script', 'style' ) as $type ) {
-			if ( ! empty( self::$dynamics[ $type ] ) ) {
-				foreach ( self::$dynamics[ $type ] as $tag ) {
-					$func = 'wp_enqueue_' . $type;
-
-					$func( $tag );
-				}
-			}
-		}
+		self::$dynamic->$type( $handle );
 
 	}
 
