@@ -19,10 +19,10 @@ class Dynamic {
 
 		foreach ( array( 'scripts', 'styles' ) as $type ) {
 			if ( ! empty( $this->{$type} ) ) {
-				foreach ( $this->{$type} as $handle ) {
+				foreach ( $this->{$type} as $handle => $src ) {
 					$function = 'wp_enqueue_' . rtrim( $type, 's' );
 
-					$function( $handle );
+					$function( $handle, $src );
 				}
 			}
 		}
@@ -30,16 +30,16 @@ class Dynamic {
 	}
 
 
-	public function script( string $handle ): void {
+	public function script( string $handle, string $src = '' ): void {
 
-		$this->scripts[] = $handle;
+		$this->scripts[ $handle ] = $src;
 
 	}
 
 
-	public function style( string $handle ): void {
+	public function style( string $handle, string $src = '' ): void {
 
-		$this->styles[] = $handle;
+		$this->styles[ $handle ] = $src;
 
 	}
 

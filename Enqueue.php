@@ -34,4 +34,18 @@ class Enqueue {
 
 	}
 
+
+	public static function script( string $handle, string $src = '' ): void {
+
+		self::$dynamic->script( $handle, $src );
+
+	}
+
+
+	public static function style( string $handle, string $src = '' ): void {
+
+		self::$dynamic->style( $handle, $src );
+
+	}
+
 }
