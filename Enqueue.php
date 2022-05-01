@@ -28,13 +28,6 @@ class Enqueue {
 	}
 
 
-	public static function asset( string $type, string $handle ): void {
-
-		self::$dynamic->$type( $handle );
-
-	}
-
-
 	public static function script( string $handle, string $src = '', array $data = array() ): void {
 
 		self::$dynamic->script( $handle, $src, $data );
