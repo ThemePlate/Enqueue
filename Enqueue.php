@@ -28,6 +28,14 @@ class Enqueue {
 	}
 
 
+	public static function asset( string $type, string $handle ): void {
+
+		_deprecated_function( __METHOD__, '2.0.0', esc_attr( __CLASS__ . '::' . $type ) );
+		self::$dynamic->$type( $handle );
+
+	}
+
+
 	public static function script( string $handle, string $src = '', array $data = array() ): void {
 
 		self::$dynamic->script( $handle, $src, $data );
