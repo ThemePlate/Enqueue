@@ -31,8 +31,9 @@ class CustomData {
 			'hreflang',
 		),
 	);
-	private array $scripts;
-	private array $styles;
+
+	private array $scripts = array();
+	private array $styles  = array();
 
 
 	public function action(): void {
