@@ -30,6 +30,11 @@ class Enqueue {
 
 	public static function asset( string $type, string $handle ): void {
 
+		if ( ! in_array( $type, array( 'script', 'style' ), true ) ) {
+			_doing_it_wrong( __METHOD__, esc_attr( 'Only "script" and "style" are known types' ), '2.0.0' );
+			return;
+		}
+
 		_deprecated_function( __METHOD__, '2.0.0', esc_attr( __CLASS__ . '::' . $type ) );
 		self::$dynamic->$type( $handle );
 

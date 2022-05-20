@@ -35,6 +35,24 @@ class EnqueueTest extends TestCase {
 		$this->assertSame( 10, has_action( 'wp_enqueue_scripts', 'ThemePlate\Enqueue\Dynamic->action()' ) );
 	}
 
+	public function for_old_method_asset_triggers_an_error_on_unwanted_type(): array {
+		return array(
+			'with unknown type passed'   => array( 'try' ),
+			'with incorrect type passed' => array( 'StYlE' ),
+		);
+	}
+
+	/**
+	 * @dataProvider for_old_method_asset_triggers_an_error_on_unwanted_type
+	 */
+	public function test_old_method_asset_triggers_an_error_on_unwanted_type( string $type ): void {
+		stubEscapeFunctions();
+		expect( '_doing_it_wrong' )->withAnyArgs()->once();
+
+		Enqueue::asset( $type, 'test' );
+		$this->assertTrue( true );
+	}
+
 	public function test_old_method_asset_is_firing_deprecated_function(): void {
 		stubEscapeFunctions();
 		expect( '_deprecated_function' )->withAnyArgs()->twice();
