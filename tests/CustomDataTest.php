@@ -30,30 +30,100 @@ class CustomDataTest extends TestCase {
 				array( 'try' => 'this' ),
 				" try='this'",
 			),
-			'with string key and boolean value'  => array(
+			'with string key and "true" value'   => array(
 				'test',
 				array( 'try' => true ),
 				' try',
+			),
+			'with string key and "false" value'  => array(
+				'test',
+				array( 'try' => false ),
+				'',
+			),
+			'with string key and "0" value'      => array(
+				'test',
+				array( 'try' => 0 ),
+				'',
+			),
+			'with string key and null value'     => array(
+				'test',
+				array( 'try' => null ),
+				'',
+			),
+			'with string key and empty string'   => array(
+				'test',
+				array( 'try' => '' ),
+				'',
+			),
+			'with string key and empty array'    => array(
+				'test',
+				array( 'try' => array() ),
+				'',
 			),
 			'with string key and integer value'  => array(
 				'test',
 				array( 'try' => 1 ),
 				" try='1'",
 			),
+			'with string key and array value'    => array(
+				'test',
+				array( 'me' => array( 'need', 'want' ) ),
+				" me='need'",
+			),
+			'with string key and deep array'     => array(
+				'test',
+				array( 'me' => array( array( 'need', 'want' ) ) ),
+				'',
+			),
 			'with integer key and value'         => array(
 				'test',
 				array( 1 => 1 ),
 				" 1='1'",
 			),
-			'with integer key and boolean value' => array(
+			'with integer key and "true" value'  => array(
 				'test',
 				array( 1 => true ),
 				' 1',
+			),
+			'with integer key and "false" value' => array(
+				'test',
+				array( 1 => false ),
+				'',
+			),
+			'with integer key and "0" value'     => array(
+				'test',
+				array( 1 => 0 ),
+				'',
+			),
+			'with integer key and null value'    => array(
+				'test',
+				array( 1 => null ),
+				'',
+			),
+			'with integer key and empty string'  => array(
+				'test',
+				array( 1 => '' ),
+				'',
+			),
+			'with integer key and empty array'   => array(
+				'test',
+				array( 1 => array() ),
+				'',
 			),
 			'with integer key and string value'  => array(
 				'test',
 				array( 1 => 'one' ),
 				" 1='one'",
+			),
+			'with integer key and array value'   => array(
+				'test',
+				array( 1 => array( 2, 3 ) ),
+				" 1='2'",
+			),
+			'with integer key and deep array'    => array(
+				'test',
+				array( 1 => array( array( 2 ), 3 ) ),
+				'',
 			),
 		);
 	}

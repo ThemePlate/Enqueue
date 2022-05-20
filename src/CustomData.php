@@ -102,10 +102,14 @@ class CustomData {
 
 		$string = '';
 
-		foreach ( $attributes as $attr => $value ) {
+		foreach ( array_filter( $attributes ) as $attr => $value ) {
+			if ( is_array( $value ) ) {
+				$value = $value[0];
+			}
+
 			if ( is_bool( $value ) ) {
 				$string .= " $attr";
-			} else {
+			} elseif ( ! is_array( $value ) ) {
 				$value   = esc_attr( $value );
 				$string .= " $attr='$value'";
 			}
