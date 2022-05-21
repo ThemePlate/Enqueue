@@ -13,6 +13,10 @@ use ThemePlate\Tester\Utils;
 use function Brain\Monkey\Functions\stubEscapeFunctions;
 
 class CustomDataTest extends TestCase {
+	// phpcs:disable WordPress.WP.EnqueuedResources
+	public const SCRIPT_TAG = "<script src='script-src' id='script-js'></script>\n";
+	public const STYLE_TAG  = "<link rel='stylesheet' id='style-css' href='style-href' media='all' />\n";
+
 	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
@@ -25,6 +29,11 @@ class CustomDataTest extends TestCase {
 
 	public function for_stringify_data_correctly(): array {
 		return array(
+			'without passing any custom data'    => array(
+				'test',
+				array(),
+				'',
+			),
 			'with string key and value'          => array(
 				'test',
 				array( 'try' => 'this' ),
@@ -141,18 +150,34 @@ class CustomDataTest extends TestCase {
 		$scripts->setValue( $data, array( $handle => $attributes ) );
 		$styles->setValue( $data, array( $handle => $attributes ) );
 
-		// phpcs:disable WordPress.WP.EnqueuedResources
-		$script_tag = "<script src='script-src' id='script-js'></script>\n";
-		$style_tag  = "<link rel='stylesheet' id='style-css' href='style-href' media='all' />\n";
+		$expect_script = str_replace( ' src', "$equivalent src", self::SCRIPT_TAG );
+		$expect_style  = str_replace( ' href=', "$equivalent href=", self::STYLE_TAG );
 
-		$expect_script = str_replace( ' src', "$equivalent src", $script_tag );
-		$expect_style  = str_replace( ' href=', "$equivalent href=", $style_tag );
-
-		$actual_script = $data->script( $script_tag, $handle );
-		$actual_style  = $data->style( $style_tag, $handle );
+		$actual_script = $data->script( self::SCRIPT_TAG, $handle );
+		$actual_style  = $data->style( self::STYLE_TAG, $handle );
 
 		$data->action();
 		$this->assertSame( $expect_script, $actual_script );
 		$this->assertSame( $expect_style, $actual_style );
+	}
+
+	public function for_no_replacements_made_to_unknown_handles(): array {
+		return array(
+			'with even "important" handle' => array( 'important' ),
+			'with even asking "please"'    => array( 'please' ),
+		);
+	}
+	/**
+	 * @dataProvider for_no_replacements_made_to_unknown_handles
+	 */
+	public function test_no_replacements_made_to_unknown_handles( string $handle ): void {
+		$data = new CustomData();
+
+		$actual_script = $data->script( self::SCRIPT_TAG, $handle );
+		$actual_style  = $data->style( self::STYLE_TAG, $handle );
+
+		$data->action();
+		$this->assertSame( self::SCRIPT_TAG, $actual_script );
+		$this->assertSame( self::STYLE_TAG, $actual_style );
 	}
 }
