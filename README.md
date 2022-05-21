@@ -26,6 +26,9 @@ add_action( 'wp_enqueue_scripts', 'theme_scripts' );
 
 add_action( 'init', array( Enqueue::class, 'init' ) );
 
+// Set to the wanted insert position; default is 10
+Enqueue::$priority = 20;
+
 // In templates before calling the get_header()
 Enqueue::script( 'slick-carousel' );
 Enqueue::style( 'slick-carousel' );

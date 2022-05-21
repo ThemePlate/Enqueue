@@ -15,15 +15,16 @@ use ThemePlate\Enqueue\Dynamic;
 class Enqueue {
 
 	private static Dynamic $dynamic;
+	public static int $priority = 10;
 
 
-	public static function init( int $priority = 10 ): void {
+	public static function init(): void {
 
 		$custom_data   = new CustomData();
 		self::$dynamic = new Dynamic();
 
 		add_action( 'wp_enqueue_scripts', array( $custom_data, 'action' ), PHP_INT_MAX );
-		add_action( 'wp_enqueue_scripts', array( self::$dynamic, 'action' ), $priority );
+		add_action( 'wp_enqueue_scripts', array( self::$dynamic, 'action' ), self::$priority );
 
 	}
 
