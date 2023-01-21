@@ -25,9 +25,13 @@ class EnqueueTest extends TestCase {
 	}
 
 	public function test_firing_init_actually_add_hooks(): void {
-		expectAdded( 'wp_enqueue_scripts' )->twice();
+		expectAdded( 'wp_enqueue_scripts' )->times( 3 );
 		Enqueue::init();
 
+		$this->assertSame(
+			PHP_INT_MAX,
+			has_action( 'wp_enqueue_scripts', 'ThemePlate\Enqueue\CustomData->init()' )
+		);
 		$this->assertSame(
 			PHP_INT_MAX,
 			has_action( 'wp_enqueue_scripts', 'ThemePlate\Enqueue\CustomData->action()' )

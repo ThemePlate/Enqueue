@@ -36,7 +36,7 @@ class CustomData {
 	private array $styles  = array();
 
 
-	public function action(): void {
+	public function init(): void {
 
 		global $wp_scripts, $wp_styles;
 
@@ -61,6 +61,11 @@ class CustomData {
 				}
 			}
 		}
+
+	}
+
+
+	public function action(): void {
 
 		if ( ! empty( $this->scripts ) ) {
 			add_filter( 'script_loader_tag', array( $this, 'script' ), 10, 2 );

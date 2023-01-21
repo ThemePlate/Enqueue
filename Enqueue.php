@@ -23,6 +23,7 @@ class Enqueue {
 		$custom_data   = new CustomData();
 		self::$dynamic = new Dynamic();
 
+		add_action( 'wp_enqueue_scripts', array( $custom_data, 'init' ), PHP_INT_MAX );
 		add_action( 'wp_enqueue_scripts', array( $custom_data, 'action' ), PHP_INT_MAX );
 		add_action( 'wp_enqueue_scripts', array( self::$dynamic, 'action' ), self::$priority );
 
