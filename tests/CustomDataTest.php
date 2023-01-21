@@ -207,10 +207,12 @@ class CustomDataTest extends TestCase {
 					'async'       => true,
 					'crossorigin' => 'anonymous',
 					'my-attr'     => 'hello',
+					'data-custom' => 'hello',
 				),
 				array(
 					'async'       => true,
 					'crossorigin' => 'anonymous',
+					'data-custom' => 'hello',
 				),
 			),
 			'with style and wanted attributes'  => array(
@@ -219,10 +221,12 @@ class CustomDataTest extends TestCase {
 					'hreflang'       => 'en-tl',
 					'referrerpolicy' => 'origin',
 					'my-attr'        => 'hello',
+					'data-custom'    => 'hello',
 				),
 				array(
 					'hreflang'       => 'en-tl',
 					'referrerpolicy' => 'origin',
+					'data-custom'    => 'hello',
 				),
 			),
 		);

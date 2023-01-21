@@ -15,20 +15,30 @@ class CustomData {
 
 	public const ATTRIBUTES = array(
 		'common'  => array(
+			'blocking',
 			'crossorigin',
 			'integrity',
 			'referrerpolicy',
+			'type',
 		),
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attributes
 		'scripts' => array(
 			'async',
 			'defer',
 			'nomodule',
 			'nonce',
-			'type',
+			'src',
 		),
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attributes
 		'styles'  => array(
-			'disabled',
+			'as',
+			'href',
 			'hreflang',
+			'imagesizes',
+			'imagesrcset',
+			'media',
+			'rel',
+			'title',
 		),
 	);
 
@@ -41,7 +51,15 @@ class CustomData {
 		$attributes  = array_merge( self::ATTRIBUTES['common'], self::ATTRIBUTES[ $type ] );
 		$intersected = array_intersect_key( $data, array_fill_keys( $attributes, '' ) );
 
-		return $intersected;
+		$custom = array_filter(
+			$data,
+			function( $key ) {
+				return 'data-' === substr( $key, 0, 5 );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+
+		return array_merge( $intersected, $custom );
 
 	}
 
