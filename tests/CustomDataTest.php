@@ -198,4 +198,41 @@ class CustomDataTest extends TestCase {
 		$this->assertSame( self::SCRIPT_TAG, $actual_script );
 		$this->assertSame( self::STYLE_TAG, $actual_style );
 	}
+
+	public function for_filter_only_return_wanted_attributes(): array {
+		return array(
+			'with script and wanted attributes' => array(
+				'scripts',
+				array(
+					'async'       => true,
+					'crossorigin' => 'anonymous',
+					'my-attr'     => 'hello',
+				),
+				array(
+					'async'       => true,
+					'crossorigin' => 'anonymous',
+				),
+			),
+			'with style and wanted attributes'  => array(
+				'styles',
+				array(
+					'hreflang'       => 'en-tl',
+					'referrerpolicy' => 'origin',
+					'my-attr'        => 'hello',
+				),
+				array(
+					'hreflang'       => 'en-tl',
+					'referrerpolicy' => 'origin',
+				),
+			),
+		);
+	}
+	/**
+	 * @dataProvider for_filter_only_return_wanted_attributes
+	 */
+	public function test_filter_only_return_wanted_attributes( string $type, array $data, array $expected ): void {
+		$actual = ( new CustomData() )->filter( $data, $type );
+
+		$this->assertSame( $expected, $actual );
+	}
 }

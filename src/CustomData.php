@@ -36,6 +36,16 @@ class CustomData {
 	private array $styles  = array();
 
 
+	public function filter( array $data, string $type ): array {
+
+		$attributes  = array_merge( self::ATTRIBUTES['common'], self::ATTRIBUTES[ $type ] );
+		$intersected = array_intersect_key( $data, array_fill_keys( $attributes, '' ) );
+
+		return $intersected;
+
+	}
+
+
 	public function add( string $type, string $handle, array $data ): void {
 
 		if ( ! in_array( $type, array( 'script', 'style' ), true ) ) {
@@ -61,10 +71,8 @@ class CustomData {
 			$type = get_class( $dependencies );
 			$type = strtolower( substr( $type, 3 ) );
 
-			$attributes = array_merge( self::ATTRIBUTES['common'], self::ATTRIBUTES[ $type ] );
-
 			foreach ( $dependencies->registered as $dependency ) {
-				$specified = array_intersect_key( $dependency->extra, array_fill_keys( $attributes, '' ) );
+				$specified = $this->filter( $dependency->extra, $type );
 
 				if ( ! empty( $specified ) ) {
 					$this->{$type}[ $dependency->handle ] = $specified;
