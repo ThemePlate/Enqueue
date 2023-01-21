@@ -9,7 +9,7 @@ namespace Tests;
 use Brain\Monkey;
 use PHPUnit\Framework\TestCase;
 use ThemePlate\Enqueue\CustomData;
-use ThemePlate\Tester\Utils;
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubEscapeFunctions;
 
 class CustomDataTest extends TestCase {
@@ -25,6 +25,26 @@ class CustomDataTest extends TestCase {
 	protected function tearDown(): void {
 		Monkey\tearDown();
 		parent::tearDown();
+	}
+
+	public function for_add_method_asset_triggers_an_error_on_unwanted_type(): array {
+		return array(
+			'with unknown type passed'   => array( 'try' ),
+			'with incorrect type passed' => array( 'StYlE' ),
+		);
+	}
+
+	/**
+	 * @dataProvider for_add_method_asset_triggers_an_error_on_unwanted_type
+	 */
+	public function test_old_method_asset_triggers_an_error_on_unwanted_type( string $type ): void {
+		stubEscapeFunctions();
+		expect( '_doing_it_wrong' )->withAnyArgs()->once();
+
+
+		( new CustomData() )->add( $type, '', array() );
+
+		$this->assertTrue( true );
 	}
 
 	public function for_stringify_data_correctly(): array {
@@ -143,12 +163,10 @@ class CustomDataTest extends TestCase {
 	public function test_stringify_data_correctly( string $handle, array $attributes, string $equivalent ): void {
 		stubEscapeFunctions();
 
-		$data    = new CustomData();
-		$scripts = Utils::get_reflection_property( CustomData::class, 'scripts' );
-		$styles  = Utils::get_reflection_property( CustomData::class, 'styles' );
+		$data = new CustomData();
 
-		$scripts->setValue( $data, array( $handle => $attributes ) );
-		$styles->setValue( $data, array( $handle => $attributes ) );
+		$data->add( 'script', $handle, $attributes );
+		$data->add( 'style', $handle, $attributes );
 
 		$expect_script = str_replace( ' src', "$equivalent src", self::SCRIPT_TAG );
 		$expect_style  = str_replace( ' href=', "$equivalent href=", self::STYLE_TAG );

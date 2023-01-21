@@ -36,6 +36,18 @@ class CustomData {
 	private array $styles  = array();
 
 
+	public function add( string $type, string $handle, array $data ): void {
+
+		if ( ! in_array( $type, array( 'script', 'style' ), true ) ) {
+			_doing_it_wrong( __METHOD__, esc_attr( 'Only "script" and "style" are known types' ), '2.2.0' );
+			return;
+		}
+
+		$this->{$type . 's'}[ $handle ] = $data;
+
+	}
+
+
 	public function init(): void {
 
 		global $wp_scripts, $wp_styles;
