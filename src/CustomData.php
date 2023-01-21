@@ -64,12 +64,10 @@ class CustomData {
 			$attributes = array_merge( self::ATTRIBUTES['common'], self::ATTRIBUTES[ $type ] );
 
 			foreach ( $dependencies->registered as $dependency ) {
-				$specified = array_intersect( array_keys( $dependency->extra ), $attributes );
+				$specified = array_intersect_key( $dependency->extra, array_fill_keys( $attributes, '' ) );
 
 				if ( ! empty( $specified ) ) {
-					foreach ( $specified as $attribute ) {
-						$this->{$type}[ $dependency->handle ][ $attribute ] = $dependency->extra[ $attribute ];
-					}
+					$this->{$type}[ $dependency->handle ] = $specified;
 				}
 			}
 		}
