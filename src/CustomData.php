@@ -103,61 +103,15 @@ class CustomData {
 
 	public function action(): void {
 
+		$tag = new LoaderTag( $this->scripts, $this->styles );
+
 		if ( ! empty( $this->scripts ) ) {
-			add_filter( 'script_loader_tag', array( $this, 'script' ), 10, 2 );
+			add_filter( 'script_loader_tag', array( $tag, 'script' ), 10, 2 );
 		}
 
 		if ( ! empty( $this->styles ) ) {
-			add_filter( 'style_loader_tag', array( $this, 'style' ), 10, 2 );
+			add_filter( 'style_loader_tag', array( $tag, 'style' ), 10, 2 );
 		}
-
-	}
-
-
-	public function script( string $tag, string $handle ): string {
-
-		if ( array_key_exists( $handle, $this->scripts ) ) {
-			$string = $this->stringify( $this->scripts[ $handle ] );
-
-			return str_replace( ' src', "$string src", $tag );
-		}
-
-		return $tag;
-
-	}
-
-
-	public function style( string $tag, string $handle ): string {
-
-		if ( array_key_exists( $handle, $this->styles ) ) {
-			$string = $this->stringify( $this->styles[ $handle ] );
-
-			return str_replace( ' href=', "$string href=", $tag );
-		}
-
-		return $tag;
-
-	}
-
-
-	private function stringify( array $attributes ): string {
-
-		$string = '';
-
-		foreach ( array_filter( $attributes ) as $attr => $value ) {
-			if ( is_array( $value ) ) {
-				$value = $value[0];
-			}
-
-			if ( is_bool( $value ) ) {
-				$string .= " $attr";
-			} elseif ( ! is_array( $value ) ) {
-				$value   = esc_attr( $value );
-				$string .= " $attr='$value'";
-			}
-		}
-
-		return $string;
 
 	}
 
