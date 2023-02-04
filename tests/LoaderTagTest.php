@@ -8,7 +8,8 @@ namespace Tests;
 
 use Brain\Monkey;
 use PHPUnit\Framework\TestCase;
-use ThemePlate\Enqueue\LoaderTag;
+use ThemePlate\Enqueue\ScriptsTag;
+use ThemePlate\Enqueue\StylesTag;
 use function Brain\Monkey\Functions\stubEscapeFunctions;
 
 class LoaderTagTest extends TestCase {
@@ -143,8 +144,8 @@ class LoaderTagTest extends TestCase {
 		stubEscapeFunctions();
 
 		$asset  = array( $handle => $attributes );
-		$script = new LoaderTag( 'src', $asset );
-		$style  = new LoaderTag( 'href', $asset );
+		$script = new ScriptsTag( $asset );
+		$style  = new StylesTag( $asset );
 
 		$expect_script = str_replace( ' src', "$equivalent src", self::SCRIPT_TAG );
 		$expect_style  = str_replace( ' href=', "$equivalent href=", self::STYLE_TAG );
@@ -168,8 +169,8 @@ class LoaderTagTest extends TestCase {
 	 */
 	public function test_no_replacements_made_to_unknown_handles( string $handle ): void {
 		$asset  = array();
-		$script = new LoaderTag( 'src', $asset );
-		$style  = new LoaderTag( 'href', $asset );
+		$script = new ScriptsTag( $asset );
+		$style  = new StylesTag( $asset );
 
 		$actual_script = $script->filter( self::SCRIPT_TAG, $handle );
 		$actual_style  = $style->filter( self::STYLE_TAG, $handle );

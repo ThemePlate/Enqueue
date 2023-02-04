@@ -117,7 +117,8 @@ class CustomDataTest extends TestCase {
 
 		$custom->action();
 
-		$has_filter = has_filter( $type . '_loader_tag', 'ThemePlate\Enqueue\LoaderTag->filter()' );
+		$type_class = 'ThemePlate\Enqueue\\' . ucfirst( $type ) . 'sTag';
+		$has_filter = has_filter( $type . '_loader_tag', $type_class . '->filter()' );
 
 		if ( $with_data ) {
 			$this->assertSame( 10, $has_filter );

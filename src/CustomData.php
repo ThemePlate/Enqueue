@@ -13,42 +13,14 @@ use WP_Dependencies;
 
 class CustomData {
 
-	public const ATTRIBUTES = array(
-		'common'  => array(
-			'blocking',
-			'crossorigin',
-			'integrity',
-			'referrerpolicy',
-			'type',
-		),
-		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attributes
-		'scripts' => array(
-			'async',
-			'defer',
-			'nomodule',
-			'nonce',
-			'src',
-		),
-		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attributes
-		'styles'  => array(
-			'as',
-			'href',
-			'hreflang',
-			'imagesizes',
-			'imagesrcset',
-			'media',
-			'rel',
-			'title',
-		),
-	);
-
 	private array $scripts = array();
 	private array $styles  = array();
 
 
 	public function filter( array $data, string $type ): array {
 
-		$attributes  = array_merge( self::ATTRIBUTES['common'], self::ATTRIBUTES[ $type ] );
+		$type_class  = __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag';
+		$attributes  = array_merge( LoaderTag::ATTRIBUTES, $type_class::ATTRIBUTES );
 		$intersected = array_intersect_key( $data, array_fill_keys( $attributes, '' ) );
 
 		$custom = array_filter(
@@ -104,13 +76,13 @@ class CustomData {
 	public function action(): void {
 
 		if ( ! empty( $this->scripts ) ) {
-			$script_tag = new LoaderTag( 'src', $this->scripts );
+			$script_tag = new ScriptsTag( $this->scripts );
 
 			add_filter( 'script_loader_tag', array( $script_tag, 'filter' ), 10, 2 );
 		}
 
 		if ( ! empty( $this->styles ) ) {
-			$style_tag = new LoaderTag( 'href', $this->styles );
+			$style_tag = new StylesTag( $this->styles );
 
 			add_filter( 'style_loader_tag', array( $style_tag, 'filter' ), 10, 2 );
 		}

@@ -9,19 +9,25 @@
 
 namespace ThemePlate\Enqueue;
 
-class LoaderTag {
+abstract class LoaderTag {
 
-	private string $attribute;
 	private array $dependencies;
 
+	public const MAIN_PROPERTY = '';
+
+	public const ATTRIBUTES = array(
+		'blocking',
+		'crossorigin',
+		'integrity',
+		'referrerpolicy',
+		'type',
+	);
 
 	/**
-	 * @param string $attribute   Where the stringified attributes will be prepended
 	 * @param array $dependencies List of dependencies to be handled with their attributes
 	 */
-	public function __construct( string $attribute, array $dependencies ) {
+	public function __construct( array $dependencies ) {
 
-		$this->attribute    = $attribute;
 		$this->dependencies = $dependencies;
 
 	}
@@ -30,9 +36,10 @@ class LoaderTag {
 	public function filter( string $tag, string $handle ): string {
 
 		if ( array_key_exists( $handle, $this->dependencies ) ) {
-			$string = $this->stringify( $this->dependencies[ $handle ] );
+			$property   = static::MAIN_PROPERTY;
+			$attributes = $this->stringify( $this->dependencies[ $handle ] );
 
-			return str_replace( " {$this->attribute}=", "$string {$this->attribute}=", $tag );
+			return str_replace( " $property=", "$attributes $property=", $tag );
 		}
 
 		return $tag;
