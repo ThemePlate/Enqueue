@@ -48,6 +48,20 @@ class CustomData {
 	}
 
 
+	public function script( string $handle, array $data ): void {
+
+		$this->scripts[ $handle ] = $data;
+
+	}
+
+
+	public function style( string $handle, array $data ): void {
+
+		$this->styles[ $handle ] = $data;
+
+	}
+
+
 	public function init(): void {
 
 		global $wp_scripts, $wp_styles;

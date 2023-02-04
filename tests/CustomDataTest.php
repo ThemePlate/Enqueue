@@ -37,7 +37,6 @@ class CustomDataTest extends TestCase {
 		stubEscapeFunctions();
 		expect( '_doing_it_wrong' )->withAnyArgs()->once();
 
-
 		( new CustomData() )->add( $type, '', array() );
 
 		$this->assertTrue( true );
@@ -112,7 +111,7 @@ class CustomDataTest extends TestCase {
 		$custom = new CustomData();
 
 		if ( $with_data ) {
-			$custom->add( $type, 'test', array( 'this' => 'please' ) );
+			$custom->$type( 'test', array( 'this' => 'please' ) );
 		}
 
 		$custom->action();
