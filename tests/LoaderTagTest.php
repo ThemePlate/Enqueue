@@ -142,14 +142,15 @@ class LoaderTagTest extends TestCase {
 	public function test_stringify_data_correctly( string $handle, array $attributes, string $equivalent ): void {
 		stubEscapeFunctions();
 
-		$asset = array( $handle => $attributes );
-		$tag   = new LoaderTag( $asset, $asset );
+		$asset  = array( $handle => $attributes );
+		$script = new LoaderTag( 'src', $asset );
+		$style  = new LoaderTag( 'href', $asset );
 
 		$expect_script = str_replace( ' src', "$equivalent src", self::SCRIPT_TAG );
 		$expect_style  = str_replace( ' href=', "$equivalent href=", self::STYLE_TAG );
 
-		$actual_script = $tag->script( self::SCRIPT_TAG, $handle );
-		$actual_style  = $tag->style( self::STYLE_TAG, $handle );
+		$actual_script = $script->filter( self::SCRIPT_TAG, $handle );
+		$actual_style  = $style->filter( self::STYLE_TAG, $handle );
 
 		$this->assertSame( $expect_script, $actual_script );
 		$this->assertSame( $expect_style, $actual_style );
@@ -166,11 +167,12 @@ class LoaderTagTest extends TestCase {
 	 * @dataProvider for_no_replacements_made_to_unknown_handles
 	 */
 	public function test_no_replacements_made_to_unknown_handles( string $handle ): void {
-		$asset = array();
-		$tag   = new LoaderTag( $asset, $asset );
+		$asset  = array();
+		$script = new LoaderTag( 'src', $asset );
+		$style  = new LoaderTag( 'href', $asset );
 
-		$actual_script = $tag->script( self::SCRIPT_TAG, $handle );
-		$actual_style  = $tag->style( self::STYLE_TAG, $handle );
+		$actual_script = $script->filter( self::SCRIPT_TAG, $handle );
+		$actual_style  = $style->filter( self::STYLE_TAG, $handle );
 
 		$this->assertSame( self::SCRIPT_TAG, $actual_script );
 		$this->assertSame( self::STYLE_TAG, $actual_style );

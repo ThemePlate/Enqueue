@@ -83,4 +83,46 @@ class CustomDataTest extends TestCase {
 
 		$this->assertSame( $expected, $actual );
 	}
+
+	public function for_action_has_wanted_filter(): array {
+		return array(
+			'with scripts and no custom data added to handles' => array(
+				'script',
+				false,
+			),
+			'with scripts and custom data added to handles'    => array(
+				'script',
+				true,
+			),
+			'with styles and no custom data added to handles'  => array(
+				'style',
+				false,
+			),
+			'with styles and custom data added to handles'     => array(
+				'style',
+				true,
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider for_action_has_wanted_filter
+	 */
+	public function test_action_has_wanted_filter( string $type, bool $with_data ): void {
+		$custom = new CustomData();
+
+		if ( $with_data ) {
+			$custom->add( $type, 'test', array( 'this' => 'please' ) );
+		}
+
+		$custom->action();
+
+		$has_filter = has_filter( $type . '_loader_tag', 'ThemePlate\Enqueue\LoaderTag->filter()' );
+
+		if ( $with_data ) {
+			$this->assertSame( 10, $has_filter );
+		} else {
+			$this->assertFalse( $has_filter );
+		}
+	}
 }

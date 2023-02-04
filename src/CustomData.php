@@ -103,14 +103,16 @@ class CustomData {
 
 	public function action(): void {
 
-		$tag = new LoaderTag( $this->scripts, $this->styles );
-
 		if ( ! empty( $this->scripts ) ) {
-			add_filter( 'script_loader_tag', array( $tag, 'script' ), 10, 2 );
+			$script_tag = new LoaderTag( 'src', $this->scripts );
+
+			add_filter( 'script_loader_tag', array( $script_tag, 'filter' ), 10, 2 );
 		}
 
 		if ( ! empty( $this->styles ) ) {
-			add_filter( 'style_loader_tag', array( $tag, 'style' ), 10, 2 );
+			$style_tag = new LoaderTag( 'href', $this->styles );
+
+			add_filter( 'style_loader_tag', array( $style_tag, 'filter' ), 10, 2 );
 		}
 
 	}

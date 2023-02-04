@@ -11,37 +11,28 @@ namespace ThemePlate\Enqueue;
 
 class LoaderTag {
 
-	private array $scripts;
-	private array $styles;
+	private string $attribute;
+	private array $dependencies;
 
 
-	public function __construct( array $scripts, array $styles ) {
+	/**
+	 * @param string $attribute   Where the stringified attributes will be prepended
+	 * @param array $dependencies List of dependencies to be handled with their attributes
+	 */
+	public function __construct( string $attribute, array $dependencies ) {
 
-		$this->scripts = $scripts;
-		$this->styles  = $styles;
-
-	}
-
-
-	public function script( string $tag, string $handle ): string {
-
-		if ( array_key_exists( $handle, $this->scripts ) ) {
-			$string = $this->stringify( $this->scripts[ $handle ] );
-
-			return str_replace( ' src', "$string src", $tag );
-		}
-
-		return $tag;
+		$this->attribute    = $attribute;
+		$this->dependencies = $dependencies;
 
 	}
 
 
-	public function style( string $tag, string $handle ): string {
+	public function filter( string $tag, string $handle ): string {
 
-		if ( array_key_exists( $handle, $this->styles ) ) {
-			$string = $this->stringify( $this->styles[ $handle ] );
+		if ( array_key_exists( $handle, $this->dependencies ) ) {
+			$string = $this->stringify( $this->dependencies[ $handle ] );
 
-			return str_replace( ' href=', "$string href=", $tag );
+			return str_replace( " {$this->attribute}=", "$string {$this->attribute}=", $tag );
 		}
 
 		return $tag;
