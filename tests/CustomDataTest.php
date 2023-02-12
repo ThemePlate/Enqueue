@@ -78,6 +78,8 @@ class CustomDataTest extends TestCase {
 	 * @dataProvider for_filter_only_return_wanted_attributes
 	 */
 	public function test_filter_only_return_wanted_attributes( string $type, array $data, array $expected ): void {
+		expect( '_deprecated_function' )->withAnyArgs()->once();
+
 		$actual = ( new CustomData() )->filter( $data, $type );
 
 		$this->assertSame( $expected, $actual );

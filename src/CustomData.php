@@ -19,6 +19,8 @@ class CustomData {
 
 	public function filter( array $data, string $type ): array {
 
+		_deprecated_function( __METHOD__, '2.4.0', __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag::filter_attributes' );
+
 		return ( 'scripts' === $type ? ScriptsTag::filter_attributes( $data ) : StylesTag::filter_attributes( $data ) );
 
 	}
@@ -30,6 +32,8 @@ class CustomData {
 			_doing_it_wrong( __METHOD__, esc_attr( 'Only "script" and "style" are known types' ), '2.2.0' );
 			return;
 		}
+
+		_deprecated_function( __METHOD__, '2.4.0', self::class . '::' . $type );
 
 		$this->{$type . 's'}[ $handle ] = $data;
 
@@ -64,7 +68,7 @@ class CustomData {
 			$type = strtolower( substr( $type, 3 ) );
 
 			foreach ( $dependencies->registered as $dependency ) {
-				$specified = $this->filter( $dependency->extra, $type );
+				$specified = ( 'scripts' === $type ? ScriptsTag::filter_attributes( $dependency->extra ) : StylesTag::filter_attributes( $dependency->extra ) );
 
 				if ( ! empty( $specified ) ) {
 					$this->{$type}[ $dependency->handle ] = $specified;
