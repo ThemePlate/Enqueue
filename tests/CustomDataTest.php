@@ -23,7 +23,7 @@ class CustomDataTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function for_add_method_asset_triggers_an_error_on_unwanted_type(): array {
+	public function for_methods_will_trigger_an_error_on_unwanted_type(): array {
 		return array(
 			'with unknown type passed'   => array( 'try' ),
 			'with incorrect type passed' => array( 'StYlE' ),
@@ -31,13 +31,25 @@ class CustomDataTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider for_add_method_asset_triggers_an_error_on_unwanted_type
+	 * @dataProvider for_methods_will_trigger_an_error_on_unwanted_type
 	 */
-	public function test_old_method_asset_triggers_an_error_on_unwanted_type( string $type ): void {
+	public function test_add_method_asset_triggers_an_error_on_unwanted_type( string $type ): void {
 		stubEscapeFunctions();
 		expect( '_doing_it_wrong' )->withAnyArgs()->once();
 
 		( new CustomData() )->add( $type, '', array() );
+
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * @dataProvider for_methods_will_trigger_an_error_on_unwanted_type
+	 */
+	public function test_filter_method_data_triggers_an_error_on_unwanted_type( string $type ): void {
+		stubEscapeFunctions();
+		expect( '_doing_it_wrong' )->withAnyArgs()->once();
+
+		( new CustomData() )->filter( array(), $type );
 
 		$this->assertTrue( true );
 	}

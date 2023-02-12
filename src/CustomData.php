@@ -19,6 +19,11 @@ class CustomData {
 
 	public function filter( array $data, string $type ): array {
 
+		if ( ! in_array( $type, array( 'scripts', 'styles' ), true ) ) {
+			_doing_it_wrong( __METHOD__, esc_attr( 'Only "scripts" and "styles" are known types' ), '2.3.0' );
+			return array();
+		}
+
 		_deprecated_function( __METHOD__, '2.4.0', __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag::filter_attributes' );
 
 		return ( 'scripts' === $type ? ScriptsTag::filter_attributes( $data ) : StylesTag::filter_attributes( $data ) );
