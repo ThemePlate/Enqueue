@@ -11,7 +11,7 @@ namespace ThemePlate\Enqueue;
 
 abstract class LoaderTag {
 
-	private array $dependencies;
+	protected array $dependencies;
 
 	public const MAIN_PROPERTY = '';
 
@@ -43,6 +43,24 @@ abstract class LoaderTag {
 		}
 
 		return $tag;
+
+	}
+
+
+	public static function filter_attributes( array $data ): array {
+
+		$attributes  = array_merge( self::ATTRIBUTES, static::ATTRIBUTES );
+		$intersected = array_intersect_key( $data, array_fill_keys( $attributes, '' ) );
+
+		$custom = array_filter(
+			$data,
+			function( $key ) {
+				return 'data-' === substr( $key, 0, 5 );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+
+		return array_merge( $intersected, $custom );
 
 	}
 

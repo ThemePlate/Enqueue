@@ -19,19 +19,7 @@ class CustomData {
 
 	public function filter( array $data, string $type ): array {
 
-		$type_class  = __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag';
-		$attributes  = array_merge( LoaderTag::ATTRIBUTES, $type_class::ATTRIBUTES );
-		$intersected = array_intersect_key( $data, array_fill_keys( $attributes, '' ) );
-
-		$custom = array_filter(
-			$data,
-			function( $key ) {
-				return 'data-' === substr( $key, 0, 5 );
-			},
-			ARRAY_FILTER_USE_KEY
-		);
-
-		return array_merge( $intersected, $custom );
+		return ( 'scripts' === $type ? ScriptsTag::filter_attributes( $data ) : StylesTag::filter_attributes( $data ) );
 
 	}
 
