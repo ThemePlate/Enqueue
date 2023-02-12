@@ -24,7 +24,7 @@ class CustomData {
 			return array();
 		}
 
-		_deprecated_function( __METHOD__, '2.4.0', __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag::filter_attributes' );
+		_deprecated_function( __METHOD__, '2.4.0', esc_html( __NAMESPACE__ . '\\' . ucfirst( $type ) . 'Tag::filter_attributes' ) );
 
 		return ( 'scripts' === $type ? ScriptsTag::filter_attributes( $data ) : StylesTag::filter_attributes( $data ) );
 
@@ -38,7 +38,7 @@ class CustomData {
 			return;
 		}
 
-		_deprecated_function( __METHOD__, '2.4.0', self::class . '::' . $type );
+		_deprecated_function( __METHOD__, '2.4.0', esc_html( self::class . '::' . $type ) );
 
 		$this->{$type . 's'}[ $handle ] = $data;
 

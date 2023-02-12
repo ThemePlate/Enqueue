@@ -90,6 +90,7 @@ class CustomDataTest extends TestCase {
 	 * @dataProvider for_filter_only_return_wanted_attributes
 	 */
 	public function test_filter_only_return_wanted_attributes( string $type, array $data, array $expected ): void {
+		stubEscapeFunctions();
 		expect( '_deprecated_function' )->withAnyArgs()->once();
 
 		$actual = ( new CustomData() )->filter( $data, $type );
@@ -98,6 +99,7 @@ class CustomDataTest extends TestCase {
 	}
 
 	public function for_action_has_wanted_filter(): array {
+		// phpcs:disable WordPress.Arrays.MultipleStatementAlignment
 		return array(
 			'with scripts and no custom data added to handles' => array(
 				'script',
@@ -116,6 +118,7 @@ class CustomDataTest extends TestCase {
 				true,
 			),
 		);
+		// phpcs:enable WordPress.Arrays.MultipleStatementAlignment
 	}
 
 	/**
