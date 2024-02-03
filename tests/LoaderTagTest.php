@@ -178,4 +178,14 @@ class LoaderTagTest extends TestCase {
 		$this->assertSame( self::SCRIPT_TAG, $actual_script );
 		$this->assertSame( self::STYLE_TAG, $actual_style );
 	}
+
+	public function test_with_noscript_style() {
+		$style = new StylesTag( array(
+			'custom' => array( 'noscript' => true ),
+		) );
+
+		$actual_style = $style->filter( self::STYLE_TAG, 'custom' );
+
+		$this->assertSame( '<noscript>' . self::STYLE_TAG . '</noscript>', $actual_style );
+	}
 }
