@@ -45,7 +45,7 @@ abstract class LoaderTag {
 				$tag = '<noscript>' . $tag . '</noscript>';
 			}
 
-			$attributes = $this->stringify( $attributes );
+			$attributes = $this->stringify( $this->clean( $tag, $attributes ) );
 
 			return str_replace( " $property=", "$attributes $property=", $tag );
 		}
@@ -69,6 +69,21 @@ abstract class LoaderTag {
 		);
 
 		return array_merge( $intersected, $custom );
+
+	}
+
+
+	private function clean( string &$tag, array $attributes ): array {
+
+		unset( $attributes[ static::MAIN_PROPERTY ] );
+
+		$pattern = array_map( function( $key ) {
+			return "/ $key=['\"][^'\"]*['\"]/";
+		}, array_keys( $attributes ) );
+
+		$tag = preg_replace( $pattern, '', $tag );
+
+		return $attributes;
 
 	}
 

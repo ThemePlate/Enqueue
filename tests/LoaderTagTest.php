@@ -14,7 +14,7 @@ use function Brain\Monkey\Functions\stubEscapeFunctions;
 
 class LoaderTagTest extends TestCase {
 	// phpcs:disable WordPress.WP.EnqueuedResources
-	public const SCRIPT_TAG = "<script src='script-src' id='script-js'></script>\n";
+	public const SCRIPT_TAG = "<script type='text/javascript' src='script-src' id='script-js'></script>\n";
 	public const STYLE_TAG  = "<link rel='stylesheet' id='style-css' href='style-href' media='all' />\n";
 
 	protected function setUp(): void {
@@ -187,5 +187,20 @@ class LoaderTagTest extends TestCase {
 		$actual_style = $style->filter( self::STYLE_TAG, 'custom' );
 
 		$this->assertSame( '<noscript>' . self::STYLE_TAG . '</noscript>', $actual_style );
+	}
+
+	public function test_with_existing_attributes() {
+		stubEscapeFunctions();
+
+		$script = new ScriptsTag( array(
+			'custom' => array(
+				'id'   => 'new-id',
+				'type' => 'module',
+			),
+		) );
+
+		$actual_script = $script->filter( self::SCRIPT_TAG, 'custom' );
+
+		$this->assertSame( "<script id='new-id' type='module' src='script-src'></script>\n", $actual_script );
 	}
 }
