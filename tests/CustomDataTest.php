@@ -63,10 +63,12 @@ class CustomDataTest extends TestCase {
 					'crossorigin' => 'anonymous',
 					'my-attr'     => 'hello',
 					'data-custom' => 'hello',
+					'type'        => 'importmap',
 				),
 				array(
 					'async'       => true,
 					'crossorigin' => 'anonymous',
+					'type'        => 'importmap',
 					'data-custom' => 'hello',
 				),
 			),

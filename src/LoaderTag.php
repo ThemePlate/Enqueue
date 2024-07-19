@@ -20,7 +20,6 @@ abstract class LoaderTag {
 		'crossorigin',
 		'integrity',
 		'referrerpolicy',
-		'type',
 	);
 
 	/**
@@ -77,29 +76,17 @@ abstract class LoaderTag {
 
 	private function clean( string &$tag, array &$attributes, string $property ): void {
 
-		$replace_main = $attributes[ $property ] ?? '';
+		$pattern     = array();
+		$replacement = array();
+
+		foreach ( $attributes as $key => $value ) {
+			$pattern[]     = "/ $key=['\"][^'\"]*['\"]/";
+			$replacement[] = $property === $key ? " $property='$value'" : '';
+		}
 
 		unset( $attributes[ $property ] );
 
-		$data = array_map( function( $key ) {
-			return array(
-				'pattern'     => "/ $key=['\"][^'\"]*['\"]/",
-				'replacement' => '',
-			);
-		}, array_keys( $attributes ) );
-
-		if ( '' !== $replace_main ) {
-			$data[] = array(
-				'pattern'     => "/ $property=['\"][^'\"]*['\"]/",
-				'replacement' => " $property='$replace_main'",
-			);
-		}
-
-		$tag = preg_replace(
-			array_column( $data, 'pattern' ),
-			array_column( $data, 'replacement' ),
-			$tag
-		);
+		$tag = preg_replace( $pattern, $replacement, $tag );
 
 	}
 
