@@ -196,11 +196,12 @@ class LoaderTagTest extends TestCase {
 			'custom' => array(
 				'id'   => 'new-id',
 				'type' => 'module',
+				'src'  => 'new-src',
 			),
 		) );
 
 		$actual_script = $script->filter( self::SCRIPT_TAG, 'custom' );
 
-		$this->assertSame( "<script id='new-id' type='module' src='script-src'></script>\n", $actual_script );
+		$this->assertSame( "<script id='new-id' type='module' src='new-src'></script>\n", $actual_script );
 	}
 }

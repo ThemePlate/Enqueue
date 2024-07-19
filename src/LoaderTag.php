@@ -45,7 +45,9 @@ abstract class LoaderTag {
 				$tag = '<noscript>' . $tag . '</noscript>';
 			}
 
-			$attributes = $this->stringify( $this->clean( $tag, $attributes ) );
+			$this->clean( $tag, $attributes, $property );
+
+			$attributes = $this->stringify( $attributes );
 
 			return str_replace( " $property=", "$attributes $property=", $tag );
 		}
@@ -73,17 +75,31 @@ abstract class LoaderTag {
 	}
 
 
-	private function clean( string &$tag, array $attributes ): array {
+	private function clean( string &$tag, array &$attributes, string $property ): void {
 
-		unset( $attributes[ static::MAIN_PROPERTY ] );
+		$replace_main = $attributes[ $property ] ?? '';
 
-		$pattern = array_map( function( $key ) {
-			return "/ $key=['\"][^'\"]*['\"]/";
+		unset( $attributes[ $property ] );
+
+		$data = array_map( function( $key ) {
+			return array(
+				'pattern'     => "/ $key=['\"][^'\"]*['\"]/",
+				'replacement' => '',
+			);
 		}, array_keys( $attributes ) );
 
-		$tag = preg_replace( $pattern, '', $tag );
+		if ( '' !== $replace_main ) {
+			$data[] = array(
+				'pattern'     => "/ $property=['\"][^'\"]*['\"]/",
+				'replacement' => " $property='$replace_main'",
+			);
+		}
 
-		return $attributes;
+		$tag = preg_replace(
+			array_column( $data, 'pattern' ),
+			array_column( $data, 'replacement' ),
+			$tag
+		);
 
 	}
 
