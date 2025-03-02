@@ -180,9 +180,11 @@ class LoaderTagTest extends TestCase {
 	}
 
 	public function test_with_noscript_style() {
-		$style = new StylesTag( array(
-			'custom' => array( 'noscript' => true ),
-		) );
+		$style = new StylesTag(
+			array(
+				'custom' => array( 'noscript' => true ),
+			)
+		);
 
 		$actual_style = $style->filter( self::STYLE_TAG, 'custom' );
 
@@ -192,13 +194,15 @@ class LoaderTagTest extends TestCase {
 	public function test_with_existing_attributes() {
 		stubEscapeFunctions();
 
-		$script = new ScriptsTag( array(
-			'custom' => array(
-				'id'   => 'new-id',
-				'type' => 'module',
-				'src'  => 'new-src',
-			),
-		) );
+		$script = new ScriptsTag(
+			array(
+				'custom' => array(
+					'id'   => 'new-id',
+					'type' => 'module',
+					'src'  => 'new-src',
+				),
+			)
+		);
 
 		$actual_script = $script->filter( self::SCRIPT_TAG, 'custom' );
 
