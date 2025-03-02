@@ -19,7 +19,11 @@ abstract class LoaderTag {
 		'blocking',
 		'crossorigin',
 		'integrity',
+		'nonce',
 		'referrerpolicy',
+
+		// deprecated
+		'charset',
 	);
 
 	/**
