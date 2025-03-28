@@ -90,7 +90,11 @@ abstract class LoaderTag {
 
 		unset( $attributes[ $property ] );
 
-		$tag = preg_replace( $pattern, $replacement, $tag );
+		$replaced = preg_replace( $pattern, $replacement, $tag );
+
+		if ( null !== $replaced ) {
+			$tag = $replaced;
+		}
 
 	}
 
