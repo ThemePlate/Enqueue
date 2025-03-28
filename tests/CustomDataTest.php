@@ -39,7 +39,7 @@ class CustomDataTest extends TestCase {
 
 		( new CustomData() )->add( $type, '', array() );
 
-		$this->assertTrue( true );
+		$this->assertFalse( has_filter( $type . '_loader_tag' ) );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class CustomDataTest extends TestCase {
 
 		( new CustomData() )->filter( array(), $type );
 
-		$this->assertTrue( true );
+		$this->assertFalse( has_filter( $type . '_loader_tag' ) );
 	}
 
 	public function for_filter_only_return_wanted_attributes(): array {

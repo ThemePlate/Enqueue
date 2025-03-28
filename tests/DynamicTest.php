@@ -52,6 +52,6 @@ class DynamicTest extends TestCase {
 		}
 
 		$dynamic->action();
-		$this->assertTrue( true );
+		$this->expectNotToPerformAssertions();
 	}
 }

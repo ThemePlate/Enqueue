@@ -54,7 +54,7 @@ class EnqueueTest extends TestCase {
 		expect( '_doing_it_wrong' )->withAnyArgs()->once();
 
 		Enqueue::asset( $type, 'test' );
-		$this->assertTrue( true );
+		$this->expectNotToPerformAssertions();
 	}
 
 	public function test_old_method_asset_is_firing_deprecated_function(): void {
@@ -63,6 +63,6 @@ class EnqueueTest extends TestCase {
 
 		Enqueue::asset( 'script', 'test' );
 		Enqueue::asset( 'style', 'test' );
-		$this->assertTrue( true );
+		$this->expectNotToPerformAssertions();
 	}
 }
