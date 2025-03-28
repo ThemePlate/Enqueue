@@ -179,7 +179,7 @@ class LoaderTagTest extends TestCase {
 		$this->assertSame( self::STYLE_TAG, $actual_style );
 	}
 
-	public function test_with_noscript_style() {
+	public function test_with_noscript_style(): void {
 		$style = new StylesTag(
 			array(
 				'custom' => array( 'noscript' => true ),
@@ -191,7 +191,7 @@ class LoaderTagTest extends TestCase {
 		$this->assertSame( '<noscript>' . self::STYLE_TAG . '</noscript>', $actual_style );
 	}
 
-	public function test_with_existing_attributes() {
+	public function test_with_existing_attributes(): void {
 		stubEscapeFunctions();
 
 		$script = new ScriptsTag(

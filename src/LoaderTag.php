@@ -67,7 +67,7 @@ abstract class LoaderTag {
 
 		$custom = array_filter(
 			$data,
-			function ( $key ) {
+			function ( $key ): bool {
 				return 'data-' === substr( $key, 0, 5 );
 			},
 			ARRAY_FILTER_USE_KEY

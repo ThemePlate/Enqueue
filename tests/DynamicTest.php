@@ -36,14 +36,14 @@ class DynamicTest extends TestCase {
 		expect( 'wp_enqueue_script' )->withAnyArgs()->once();
 		expect( 'wp_enqueue_style' )->withAnyArgs()->once();
 
-		if ( $with_data ) {
+		if ( array() !== $with_data ) {
 			expect( 'wp_script_add_data' )->withAnyArgs()->once();
 			expect( 'wp_style_add_data' )->withAnyArgs()->once();
 		}
 
 		$dynamic = new Dynamic();
 
-		if ( $with_data ) {
+		if ( array() !== $with_data ) {
 			$dynamic->script( 'test', 'script', $with_data );
 			$dynamic->style( 'test', 'style', $with_data );
 		} else {
