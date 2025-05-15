@@ -28,8 +28,10 @@ class Dynamic {
 
 		foreach ( array( 'scripts', 'styles' ) as $type ) {
 			foreach ( $this->{$type} as $handle => $src ) {
+				/** @var non-falsy-string $function */
 				$function = 'wp_enqueue_' . rtrim( $type, 's' );
 
+				/** @var callable-string $function */
 				$function( $handle, $src );
 				$this->add( $type, $handle );
 			}
@@ -42,8 +44,10 @@ class Dynamic {
 
 		if ( ! empty( $this->data[ $type ][ $handle ] ) ) {
 			foreach ( $this->data[ $type ][ $handle ] as $attribute => $value ) {
+				/** @var non-falsy-string $function */
 				$function = 'wp_' . rtrim( $type, 's' ) . '_add_data';
 
+				/** @var callable-string $function */
 				$function( $handle, $attribute, $value );
 			}
 		}
