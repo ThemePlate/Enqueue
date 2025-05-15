@@ -45,7 +45,7 @@ abstract class LoaderTag {
 			if ( in_array( 'noscript', array_keys( $attributes ), true ) ) {
 				unset( $attributes['noscript'] );
 
-				$tag = '<noscript>' . $tag . '</noscript>';
+				$tag = sprintf( "<noscript>%s</noscript>\n", trim( $tag ) );
 			}
 
 			$this->clean( $tag, $attributes, $property );

@@ -188,7 +188,7 @@ class LoaderTagTest extends TestCase {
 
 		$actual_style = $style->filter( self::STYLE_TAG, 'custom' );
 
-		$this->assertSame( '<noscript>' . self::STYLE_TAG . '</noscript>', $actual_style );
+		$this->assertSame( '<noscript>' . trim( self::STYLE_TAG ) . "</noscript>\n", $actual_style );
 	}
 
 	public function test_with_existing_attributes(): void {
