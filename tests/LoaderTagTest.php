@@ -27,6 +27,7 @@ class LoaderTagTest extends TestCase {
 		parent::tearDown();
 	}
 
+	/** @return array<string, array{string, mixed[], string}> */
 	public function for_stringify_data_correctly(): array {
 		return array(
 			'without passing any custom data'    => array(
@@ -139,6 +140,8 @@ class LoaderTagTest extends TestCase {
 
 	/**
 	 * @dataProvider for_stringify_data_correctly
+	 *
+	 * @param array{string, mixed[], string}  $attributes
 	 */
 	public function test_stringify_data_correctly( string $handle, array $attributes, string $equivalent ): void {
 		stubEscapeFunctions();
@@ -157,6 +160,7 @@ class LoaderTagTest extends TestCase {
 		$this->assertSame( $expect_style, $actual_style );
 	}
 
+	/** @return array<string, array{string}> */
 	public function for_no_replacements_made_to_unknown_handles(): array {
 		return array(
 			'with even "important" handle' => array( 'important' ),

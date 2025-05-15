@@ -22,6 +22,7 @@ class DynamicTest extends TestCase {
 		parent::tearDown();
 	}
 
+	/** @return array<string, array{array<mixed>}> */
 	public function for_script_and_style_fires_wanted_functions(): array {
 		return array(
 			'with only handle passed to methods'     => array( array() ),
@@ -31,6 +32,8 @@ class DynamicTest extends TestCase {
 
 	/**
 	 * @dataProvider for_script_and_style_fires_wanted_functions
+	 *
+	 * @param array<mixed> $with_data
 	 */
 	public function test_script_and_style_fires_wanted_functions( array $with_data ): void {
 		expect( 'wp_enqueue_script' )->withAnyArgs()->once();

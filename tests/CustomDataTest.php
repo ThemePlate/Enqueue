@@ -23,6 +23,7 @@ class CustomDataTest extends TestCase {
 		parent::tearDown();
 	}
 
+	/** @return array<string, array{string}> */
 	public function for_methods_will_trigger_an_error_on_unwanted_type(): array {
 		return array(
 			'with unknown type passed'   => array( 'try' ),
@@ -54,6 +55,7 @@ class CustomDataTest extends TestCase {
 		$this->assertFalse( has_filter( $type . '_loader_tag' ) );
 	}
 
+	/** @return array<string, array{string, array<string, mixed>, array<string, mixed>}> */
 	public function for_filter_only_return_wanted_attributes(): array {
 		return array(
 			'with script and wanted attributes' => array(
@@ -90,6 +92,9 @@ class CustomDataTest extends TestCase {
 	}
 	/**
 	 * @dataProvider for_filter_only_return_wanted_attributes
+	 *
+	 * @param array<string, mixed> $data
+	 * @param array<string, mixed> $expected
 	 */
 	public function test_filter_only_return_wanted_attributes( string $type, array $data, array $expected ): void {
 		stubEscapeFunctions();
@@ -100,6 +105,7 @@ class CustomDataTest extends TestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
+	/** @return array<string, array{string, bool}> */
 	public function for_action_has_wanted_filter(): array {
 		// phpcs:disable WordPress.Arrays.MultipleStatementAlignment
 		return array(

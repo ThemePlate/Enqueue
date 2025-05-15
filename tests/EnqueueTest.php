@@ -39,6 +39,7 @@ class EnqueueTest extends TestCase {
 		$this->assertSame( 10, has_action( 'wp_enqueue_scripts', 'ThemePlate\Enqueue\Dynamic->action()' ) );
 	}
 
+	/** @return array<string, array{string}> */
 	public function for_old_method_asset_triggers_an_error_on_unwanted_type(): array {
 		return array(
 			'with unknown type passed'   => array( 'try' ),
